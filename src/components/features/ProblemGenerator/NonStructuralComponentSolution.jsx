@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { MathJax } from "better-react-mathjax";
-export default function NonStructuralComponentSolution({equipmentName, table, tableName, ap, SDS, Wp, Rp, Ip, z, h, Fp_original, Fp_max, Fp_min, answer} ) {
+export default function NonStructuralComponentSolution({ equipmentName, table, tableName, ap, SDS, Wp, Rp, Ip, z, h, Fp_original, Fp_max, Fp_min, answer }) {
     // Renamed Fp_original, Fp_max, and Fp_min.
     return (
         <Fragment>
@@ -28,10 +28,13 @@ export default function NonStructuralComponentSolution({equipmentName, table, ta
             </p>
             <br />
             <p>Third, use the equations 13.1-1, 13.3-2, and 13.3-3 to solve for the component force.</p>
-            <br />
-            <p className="ml-40">
+            <p className='flex justify-start'>
                 <MathJax>
-                    {`\\(F_{p} = \\frac{0.4a_{p}S_{DS}W_{p}}{(\\frac{R_{p}}{I_{p}})}(1 + 2\\frac{z}{h}) = \\frac{0.4(${ap})(${SDS})(${Wp})}{${Rp}}(1 + 2\\frac{${z}}{${h}}) = ${Fp_original}\\ lb\\)`}
+                    {`\\begin{align}
+                        F_{p} &= \\frac{0.4a_{p}S_{DS}W_{p}}{(\\frac{R_{p}}{I_{p}})}(1 + 2\\frac{z}{h}) \\\\[5px]
+                        &= \\frac{0.4(${ap})(${SDS})(${Wp})}{${Rp}}(1 + 2\\frac{${z}}{${h}}) \\\\[5px]
+                        &= ${Fp_original}\\ lb
+                    \\end{align}`}
                 </MathJax>
             </p>
             <br />
@@ -40,10 +43,13 @@ export default function NonStructuralComponentSolution({equipmentName, table, ta
                     {`\\(F_{p}\\) is not required to be taken as greater than`}
                 </MathJax>
             </p>
-            <br />
-            <p className="ml-40">
+            <p className='flex justify-start'>
                 <MathJax>
-                    {`\\(F_{pmax} = 1.6S_{DS}I_{p}W_{p} = 1.6(${SDS})(${Ip})(${Wp}) = ${Fp_max}\\ lb\\)`}
+                    {`\\begin{align}
+                        F_{pmax} &= 1.6S_{DS}I_{p}W_{p} \\\\[5px]
+                        &= 1.6(${SDS})(${Ip})(${Wp}) \\\\[5px]
+                        &= ${Fp_max}\\ lb
+                    \\end{align}`}
                 </MathJax>
             </p>
             <br />
@@ -52,16 +58,28 @@ export default function NonStructuralComponentSolution({equipmentName, table, ta
                     {`and \\(F_{p}\\) shall not be taken as less than`}
                 </MathJax>
             </p>
-            <br />
-            <p className="ml-40">
+            <p className='flex justify-start'>
                 <MathJax>
-                    {`\\(F_{pmin} = 0.3S_{DS}I_{p}W_{p} = 0.3(${SDS})(${Ip})(${Wp}) = ${Fp_min}\\ lb\\)`}
+                    {`\\begin{align}
+                        F_{pmin} &= 0.3S_{DS}I_{p}W_{p} \\\\[5px]
+                        &= 0.3(${SDS})(${Ip})(${Wp}) \\\\[5px]
+                        &= ${Fp_min}\\ lb
+                    \\end{align}`}
                 </MathJax>
             </p>
             <br />
-            <p>
+            <p className='flex justify-start'>
                 <MathJax>
-                    {`\\(F_{p} = max(min(F_{p},\\ F_{pmax}),\\ F_{pmin}) = max(min(${Fp_original}\\ lb,\\ ${Fp_max}\\ lb),\\ ${Fp_min}\\ lb) = ${answer}\\ lb\\)`}
+                    {/* {`\\(\\eqalign{
+                        F_{p} &= max(min(F_{p},\\ F_{pmax}),\\ F_{pmin}) \\\\[5px]
+                        &= max(min(${Fp_original}\\ lb,\\ ${Fp_max}\\ lb),\\ ${Fp_min}\\ lb) \\\\[5px]
+                        &= ${answer}\\ lb
+                    }\\)`} */}
+                    {`\\begin{align}
+                        F_{p} &= max(min(F_{p},\\ F_{pmax}),\\ F_{pmin}) \\\\[5px]
+                        &= max(min(${Fp_original}\\ lb,\\ ${Fp_max}\\ lb),\\ ${Fp_min}\\ lb) \\\\[5px]
+                        &= ${answer}\\ lb
+                    \\end{align}`}
                 </MathJax>
             </p>
             <br />
