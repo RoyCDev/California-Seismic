@@ -18,7 +18,7 @@ const Timer = () => {
 
   const stopTimer = () => {
     clearInterval(timerId);
-    colorRef.current.classList.remove("bg-red-400");
+    colorRef.current.classList.remove("text-red-700");
     setTimerStarted(false);
     setSeconds(0);
     setMinutes(0);
@@ -29,29 +29,28 @@ const Timer = () => {
       setMinutes((prev) => prev + 1);
     }
     if (minutes === 2 && seconds === 45) {
-      colorRef.current.classList.add("bg-red-400");
+      colorRef.current.classList.add("text-red-700");
     }
   }, [seconds]);
 
   return (
     <div
       ref={colorRef}
-      className="border-2 shadow-xl rounded-full w-40 font-bold"
+      className="flex gap-2"
     >
-      <p className="font-extrabold text-2xl">
-        {minutes < 10 ? "0" + minutes : minutes}:
-        {seconds < 10 ? "0" + seconds : seconds}
-      </p>
-
       {timerStarted ? (
         <button onClick={stopTimer}>
-          <StopIcon className="h-5 w-5" />
+          <StopIcon className="h-4 w-4" />
         </button>
       ) : (
         <button onClick={startTimer}>
-          <PlayIcon className="h-5 w-5" />
+          <PlayIcon className="h-4 w-4" />
         </button>
       )}
+      <p className="font-bold text-base tracking-wider">
+        {minutes < 10 ? "0" + minutes : minutes}:
+        {seconds < 10 ? "0" + seconds : seconds}
+      </p>
     </div>
   );
 };

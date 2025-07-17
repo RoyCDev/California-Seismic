@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react";
 import Timer from "./Timer";
 import Question from "./Question";
 import Tooltip from "../../common/Tooltip";
+import fundamentalPeriodIcon from "./categoryIcons/fundamentalPeriod.png";
+import nonstructuralComponentIcon from "./categoryIcons/nonstructuralComponent.png";
+import baseShearIcon from "./categoryIcons/baseShear.png";
+import randomIcon from "./categoryIcons/random.png";
+
 const QuestionGeneratorDisplay = () => {
   const categories = [
-    "Fundamental Period",
-    "Nonstructural Component",
-    "Base Shear",
-    "Category 4",
-    "Category 5",
-    "Category 6",
+    { title: "Fundamental Period", icon: fundamentalPeriodIcon },
+    { title: "Nonstructural Component", icon: nonstructuralComponentIcon },
+    { title: "Base Shear", icon: baseShearIcon },
+    { title: "Random", icon: randomIcon }
   ];
   const [category, setCategory] = useState("Fundamental Period");
   const [answeredCorrect, setAnsweredCorrect] = useState(0);
@@ -26,45 +29,44 @@ const QuestionGeneratorDisplay = () => {
   useEffect(() => {
     localStorage.setItem("bestScore", JSON.stringify(bestScore));
   }, [bestScore]);
+
   return (
-    <div className="m-auto max-w-6xl min-h-[calc(92vh-120px)]">
-      <div className="grid grid-cols-3 gap-5 m-5 mt-0">
-        {categories.map((item) => (
+    <div className="text-start flex flex-col lg:flex-row gap-6 px-4 mx-auto my-8 max-w-screen-xl">
+      <div className="text-sm text-gray-500 flex flex-col flex-shrink-0">
+        <p className="mb-1">Category</p>
+        {categories.map(({ title, icon }) => (
           <div
-            key={item}
-            className="border-2 rounded-lg cursor-pointer font-bold hover:bg-slate-300"
-            onClick={() => setCategory(item)}
+            key={title}
+            className={`flex items-center gap-3 p-3 pr-5 rounded-lg cursor-pointer ${category === title ? " bg-yellow-50 text-black" : ""}`}
+            onClick={() => setCategory(title)}
           >
-            {item}
+            <img src={icon} className="size-8" />
+            {title}
           </div>
         ))}
-      </div>
-      <div className="flex justify-evenly">
-        <div className="flex flex-col justify-center gap-10 items-center ">
-          <Tooltip content={"Streak of correctly answered in current session."}>
-            <div className="border-2 rounded-full shadow-xl w-40 font-bold">
-              <p>Current</p>
-              <p className="font-extrabold text-2xl">{answeredCorrect}</p>
-            </div>
-          </Tooltip>
-          <Tooltip
-            content={
-              "Timer for 2:45 mins. Changes to red color after specified time."
-            }
-          >
+
+        <div className="text-black mt-4 lg:mt-auto">
+          <Tooltip content="Timer for 2:45 mins. Changes to red color after specified time.">
             <Timer />
           </Tooltip>
-          <Tooltip
-            content={"Best streak of correctly answered in all sessions."}
-          >
-            <div className="border-2 rounded-full shadow-xl w-40 font-bold">
-              <p>Best</p>
-              <p className="font-extrabold text-2xl">{bestScore}</p>
-            </div>
-          </Tooltip>
+          <div className="flex justify-around">
+            <Tooltip content="Streak of correctly answered in current session.">
+              <div className="flex items-center gap-5">
+                <p className="text-gray-500">Current</p>
+                <p className="font-bold">{answeredCorrect}</p>
+              </div>
+            </Tooltip>
+            <Tooltip content="Best streak of correctly answered in all sessions.">
+              <div className="flex items-center gap-5">
+                <p className="text-gray-500">Best</p>
+                <p className="font-bold">{bestScore}</p>
+              </div>
+            </Tooltip>
+          </div>
         </div>
-        <Question category={category} answeredCorrect={setAnsweredCorrect} />
       </div>
+
+      <Question category={category} answeredCorrect={setAnsweredCorrect} />
     </div>
   );
 };
