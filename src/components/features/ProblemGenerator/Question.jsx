@@ -14,7 +14,7 @@ const valuesEqual = (val1, val2) => {
   return val1 === val2;
 };
 
-const Question = ({ category, answeredCorrect }) => {
+const Question = ({ category, answeredCorrect, resetTimer }) => {
   const [question, setQuestion] = useState({
     question: ``,
     choices: [],
@@ -54,6 +54,7 @@ const Question = ({ category, answeredCorrect }) => {
     }
     setSubmitted(false);
     setViewSolution(false);
+    resetTimer();
   }
 
   return (

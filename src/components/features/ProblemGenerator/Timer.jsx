@@ -1,37 +1,41 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { PlayIcon, StopIcon } from "@heroicons/react/24/solid";
 
-const Timer = () => {
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+const Timer = (props, ref) => {
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerId, setTimerId] = useState(0);
+  const seconds = secondsElapsed % 60;
+  const minutes = Math.floor(secondsElapsed / 60);
   const colorRef = useRef();
+
+  useEffect(() => {
+    if (secondsElapsed === 165) { // 2 minutes 45 seconds
+      colorRef.current.classList.add("text-red-700");
+    }
+  }, [secondsElapsed]);
+
   const startTimer = () => {
     setTimerStarted(true);
     setTimerId(
       setInterval(() => {
-        setSeconds((prev) => prev + 1);
+        setSecondsElapsed((prev) => prev + 1);
       }, 1000)
     );
   };
-
+  const resetTimer = () => {
+    colorRef.current.classList.remove("text-red-700");
+    setSecondsElapsed(0);
+  }
   const stopTimer = () => {
     clearInterval(timerId);
-    colorRef.current.classList.remove("text-red-700");
     setTimerStarted(false);
-    setSeconds(0);
-    setMinutes(0);
+    resetTimer();
   };
-  useEffect(() => {
-    if (seconds === 60) {
-      setSeconds(0);
-      setMinutes((prev) => prev + 1);
-    }
-    if (minutes === 2 && seconds === 45) {
-      colorRef.current.classList.add("text-red-700");
-    }
-  }, [seconds]);
+
+  // expose resetTimer() to parent without lifting the states up
+  // better to have timer related logic to stay here as a separate file
+  useImperativeHandle(ref, () => ({ resetTimer }), [])
 
   return (
     <div
@@ -55,4 +59,4 @@ const Timer = () => {
   );
 };
 
-export default Timer;
+export default forwardRef(Timer);

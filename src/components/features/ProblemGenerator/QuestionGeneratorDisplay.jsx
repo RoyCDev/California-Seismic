@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Timer from "./Timer";
 import Question from "./Question";
 import CategoryList from "./CategoryList";
@@ -21,12 +21,19 @@ const QuestionGeneratorDisplay = () => {
     localStorage.setItem("bestScore", JSON.stringify(bestScore));
   }, [bestScore]);
 
+  const timerRef = useRef();
+  const resetTimer = () => timerRef.current?.resetTimer();
+
   return (
     <main className="text-start px-4 mx-auto my-8 max-w-screen-xl relative">
-      <CategoryList category={category} setCategory={setCategory} />
+      <CategoryList
+        category={category}
+        setCategory={setCategory}
+        resetTimer={resetTimer}
+      />
       <section className="flex justify-between text-sm lg:block lg:absolute lg:bottom-0 my-5 lg:my-0 z-10">
         <Tooltip content="Timer for 2:45 mins. Changes to red color after specified time.">
-          <Timer />
+          <Timer ref={timerRef} />
         </Tooltip>
         <div className="flex justify-between w-[175px]">
           <Tooltip content="Streak of correctly answered in current session.">
@@ -43,7 +50,11 @@ const QuestionGeneratorDisplay = () => {
           </Tooltip>
         </div>
       </section>
-      <Question category={category} answeredCorrect={setAnsweredCorrect} />
+      <Question
+        category={category}
+        answeredCorrect={setAnsweredCorrect}
+        resetTimer={resetTimer}
+      />
     </main>
   );
 };
