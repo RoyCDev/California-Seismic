@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import generatorLogic from "./GeneratorLogic";
 import problemIcon from "./problemIcon.png"
-import { ForwardIcon, ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 const valuesEqual = (val1, val2) => {
   if (Array.isArray(val1) && Array.isArray(val2)) {
@@ -20,7 +20,6 @@ const Question = ({ category, answeredCorrect }) => {
     choices: [],
     answer: "",
   });
-  const [showSolution, setShowSolution] = useState(false);
   const [viewSolution, setViewSolution] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [chosen, setChosen] = useState(null);
@@ -30,12 +29,10 @@ const Question = ({ category, answeredCorrect }) => {
     setQuestion(generatorLogic(category));
     setChosen(null);
     setViewSolution(false);
-    setShowSolution(false);
     setSubmitted(false);
   }, [category]);
 
   const handleSubmit = () => {
-    setShowSolution(true);
     setSubmitted(true);
     if (valuesEqual(question.answer, chosen)) {
       answeredCorrect((prev) => prev + 1);
@@ -50,7 +47,6 @@ const Question = ({ category, answeredCorrect }) => {
   };
 
   const handleRegenerate = () => {
-    setShowSolution(false);
     setChosen(null);
     setQuestion(generatorLogic(category));
     if (!submitted) {
@@ -61,12 +57,12 @@ const Question = ({ category, answeredCorrect }) => {
   }
 
   return (
-    <div className="lg:flex space-y-6 lg:space-y-0 relative">
-      <div className={`flex-1 ${viewSolution ? "lg:mr-[399px]" : ""}`}>
-        <div className="flex items-center gap-2 mb-3">
+    <section className="flex flex-col lg:flex-row gap-8">
+      <div className="flex-1">
+        <h1 className="flex items-center gap-2 font-semibold text-2xl text-sky-800 mb-3">
           <img src={problemIcon} alt="problem icon" />
-          <p className="font-semibold text-2xl text-sky-800">Random Problem Generator</p>
-        </div>
+          Random Problem Generator
+        </h1>
 
         <p>{question.question}</p>
         <img
@@ -94,14 +90,14 @@ const Question = ({ category, answeredCorrect }) => {
                         id={ind}
                         value={choice}
                         checked={isSelected}
-                        disabled={showSolution}
+                        disabled={submitted}
                         onClick={() => setChosen(isSelected ? null : choice)}
                       />
                     </td>
                     <td>
                       <label
                         htmlFor={ind}
-                        className={`block px-4 py-2.5 ${showSolution ? "" : "cursor-pointer"}`}>
+                        className={`block px-4 py-2.5 ${submitted ? "" : "cursor-pointer"}`}>
                         <span className="font-semibold mr-3">{String.fromCharCode(ind + 65)}.</span>
                         {Array.isArray(choice) ? `[${choice.join(', ')}]` : choice} {question.label}
                       </label>
@@ -113,24 +109,25 @@ const Question = ({ category, answeredCorrect }) => {
           </tbody>
         </table>
 
-        <div className="flex justify-end items-center mt-8 gap-5">
+        <div className="flex justify-end items-center gap-5 font-semibold mt-8">
           <button
-            className={`font-semibold bg-slate-200 w-44 p-2.5 rounded ${showSolution ? "cursor-pointer" : "pointer-events-none text-gray-500"}`}
+            className={`bg-slate-200 w-44 p-2.5 rounded ${submitted ? "" : "text-gray-500"}`}
             onClick={() => setViewSolution(!viewSolution)}
+            disabled={!submitted}
           >
             {viewSolution ? "Hide Solution" : "View Solution"}
           </button>
 
-          {(!chosen || showSolution) ? (
+          {(!chosen || submitted) ? (
             <button
-              className="flex justify-center items-center gap-2 font-semibold bg-slate-700 text-white w-44 p-2.5 rounded"
+              className=" bg-slate-700 text-white w-44 p-2.5 rounded flex justify-center items-center gap-2"
               onClick={handleRegenerate}
             >
               Regenerate <ArrowPathIcon className="h-5 w-5" />
             </button>
           ) : (
             <button
-              className="font-semibold bg-slate-700 text-white w-44 p-2.5 rounded"
+              className="bg-slate-700 text-white w-44 p-2.5 rounded"
               onClick={handleSubmit}
             >
               Submit
@@ -140,17 +137,19 @@ const Question = ({ category, answeredCorrect }) => {
       </div>
 
       {viewSolution &&
-        <div className="lg:w-[375px] text-sm bg-slate-200 p-5 rounded right-0 lg:absolute h-full lg:overflow-y-scroll">
-          <button
-            className="sticky top-0 float-right bg-slate-200"
-            onClick={() => setViewSolution(!viewSolution)}
-          >
-            <XMarkIcon className="h-5 w-5" />
-          </button>
-          {question.solution}
-        </div>
+        <section className="bg-slate-200 rounded lg:sticky lg:top-[7.5vh] lg:max-h-[85vh] lg:w-[400px] lg:overflow-y-auto">
+          <div className="p-5 text-sm w-full lg:absolute">
+            <button
+              className="float-right bg-slate-200 lg:sticky lg:top-0"
+              onClick={() => setViewSolution(!viewSolution)}
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+            {question.solution}
+          </div>
+        </section>
       }
-    </div>
+    </section>
   );
 };
 
