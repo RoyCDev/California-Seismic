@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import QuestionChoices from "./QuestionChoices";
 import generatorLogic from "./GeneratorLogic";
 import problemIcon from "./problemIcon.png"
 import { ArrowPathIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -73,42 +74,13 @@ const Question = ({ category, answeredCorrect, resetTimer }) => {
         />
 
         <p className="mt-5 mb-3">Please choose one of the following answers:</p>
-        <table className="w-full border">
-          <tbody className="divide-y divide-solid">
-            {question.choices.map((choice, ind) => {
-              const isSelected = valuesEqual(choice, chosen);
-              return (
-                (
-                  <tr
-                    key={ind}
-                    ref={isSelected ? colorRef : null}
-                    className={isSelected ? "bg-slate-200" : ""}
-                  >
-                    <td hidden>
-                      <input
-                        type="radio"
-                        name="choice"
-                        id={ind}
-                        value={choice}
-                        checked={isSelected}
-                        disabled={submitted}
-                        onClick={() => setChosen(isSelected ? null : choice)}
-                      />
-                    </td>
-                    <td>
-                      <label
-                        htmlFor={ind}
-                        className={`block px-4 py-2.5 ${submitted ? "" : "cursor-pointer"}`}>
-                        <span className="font-semibold mr-3">{String.fromCharCode(ind + 65)}.</span>
-                        {Array.isArray(choice) ? `[${choice.join(', ')}]` : choice} {question.label}
-                      </label>
-                    </td>
-                  </tr>
-                )
-              )
-            })}
-          </tbody>
-        </table>
+        <QuestionChoices
+          question={question}
+          chosen={chosen}
+          setChosen={setChosen}
+          colorRef={colorRef}
+          submitted={submitted}
+        />
 
         <div className="flex justify-end items-center gap-5 font-semibold mt-8">
           <button
